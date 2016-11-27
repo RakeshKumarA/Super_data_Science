@@ -1,0 +1,65 @@
+## Data Preprocessing
+
+```{r,warning=FALSE,message=FALSE}
+# Importing dataset
+
+dataset <- read.csv("Data.csv")
+
+```
+
+## Missing Data - Continuos data
+
+```{r,warning=FALSE,message=FALSE}
+# Missing datas
+dataset
+
+dataset$Age <- ifelse(is.na(dataset$Age),mean(dataset$Age, na.rm = TRUE),dataset$Age)
+
+dataset$Salary <- ifelse(is.na(dataset$Salary),mean(dataset$Salary, na.rm = TRUE),dataset$Salary)
+
+dataset
+
+```
+
+## One hot Encoding 
+
+```{r,warning=FALSE,message=FALSE}
+# One hot encoding for categorical data
+
+dataset$Country <- factor(dataset$Country, 
+                          levels = c("France","Spain","Germany"),
+                          labels = c(1,2,3))
+
+dataset$Purchased <- factor(dataset$Purchased, 
+                          levels = c("No","Yes"),
+                          labels = c(0,1))
+
+head(dataset)
+```
+
+
+
+## Splitting Train and Test data
+
+```{r,warning=FALSE,message=FALSE}
+require(caTools)
+
+set.seed(123)
+
+split <- sample.split(dataset$Purchased,SplitRatio = 0.8)
+
+train <- subset(dataset,split == TRUE)
+test <- subset(dataset,split == FALSE)
+
+```
+
+## Feature Scaling
+
+Machine learning models are based on Euclidian Distance. Euclidean distance is square root of sum of squares of two co-ordinates. If one of the co-ordinate has a larger scale, the distance will be dominated by that variable. Hence feature scaling is required.
+
+```{r,warning=FALSE,message=FALSE}
+train[2:3] <- scale(train[2:3])
+test[2:3] <- scale(test[2:3])
+head(train)
+```
+
