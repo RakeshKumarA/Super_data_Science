@@ -1,0 +1,58 @@
+## Simple Linear Regression
+
+### Data Preprocessing
+
+```{r,message=FALSE,warning=FALSE}
+##Importing SAlary Data
+require(caTools)
+dataset <- read.csv("Salary_Data.csv")
+
+## Split data set
+
+split <- sample.split(dataset$Salary, SplitRatio = 2/3)
+
+train <- subset(dataset, split == TRUE)
+test <- subset(dataset, split == FALSE)
+
+```
+
+### Fitting SLR to training set
+
+```{r,message=FALSE,warning=FALSE}
+
+regressor <- lm(Salary ~ YearsExperience, train)
+
+summary(regressor)
+```
+
+### Predict Test set
+
+```{r,message=FALSE,warning=FALSE}
+
+ypred <- predict(regressor, newdata = test)
+
+```
+
+### Visualizing data set
+
+```{r,message=FALSE,warning=FALSE}
+require(ggplot2)
+
+ggplot() +
+    geom_point(aes(x = train$YearsExperience, y = train$Salary),color = 'red') +
+    geom_line(aes(x = train$YearsExperience, y = predict(regressor, newdata = train)),
+              color = "blue") +
+    ggtitle('Salary Vs Experience (Training Data)') +
+    xlab('Experience') +
+    ylab('Salary')
+
+ggplot() +
+    geom_point(aes(x = test$YearsExperience, y = test$Salary),color = 'red') +
+    geom_line(aes(x = test$YearsExperience, y = predict(regressor, newdata = test)),
+              color = "blue") +
+    ggtitle('Salary Vs Experience (Test Data)') +
+    xlab('Experience') +
+    ylab('Salary')
+
+
+```
